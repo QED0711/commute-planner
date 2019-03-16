@@ -1,5 +1,6 @@
 const googleMapsClient = require('@google/maps').createClient({
-	key : "AIzaSyCcVjp8hhEkBMPaZeZV_FokWxM8W3aJXUc"
+	key: "AIzaSyBpnUkjHlpYmffT6Rlsx9XxdyMr9w36Ufc"
+	// key : "AIzaSyCcVjp8hhEkBMPaZeZV_FokWxM8W3aJXUc"
 });
 
 class CommuteQuery {
@@ -10,18 +11,19 @@ class CommuteQuery {
 		this.avoid = ["tolls"];
 		this.traffic_model = "best_guess";
 		this.departure_time = "now"
-		console.log("CREATED")
 	}
 
 	getCommute(){
-		googleMapsClient.distanceMatrix(this, (err, response) => {
-			if(err){
-				console.log(err)
-			} else {
-				console.log(response)
-			}
-			
-		});
+		return new Promise(resolve => {
+			googleMapsClient.distanceMatrix(this, (err, response) => {
+				if(err){
+					console.log(err)
+				} else {
+					resolve(response)
+				}
+				
+			});
+		})
 	}
 
 }

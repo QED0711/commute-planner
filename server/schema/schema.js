@@ -23,7 +23,7 @@ const RootQuery = new GraphQLObjectType({
         commuteTimes: {
             type: CommuteTimeType,
             resolve(parent, args){
-                return {duration: [15, 35]}
+                return CommuteTime.find({})
             }
         },
 
@@ -47,13 +47,19 @@ const Mutation = new GraphQLObjectType({
             args: {
                 origin: {type: new GraphQLNonNull(GraphQLString)},
                 destination: {type: new GraphQLNonNull(GraphQLString)},
-                currentTime: {type: new GraphQLNonNull(GraphQLInt)},
-                newDuration: {type: new GraphQLNonNull(GraphQLInt)}
+                // currentTime: {type: new GraphQLNonNull(GraphQLInt)},
             },
-            async resolve(parent, {origin, destination, currentTime, newDuration}){
+            async resolve(parent, {origin, destination}){
+                let currentTime = new Date()
+                console.log(currentTime.getHours(), currentTime.getMinutes())
+                currentTime = (currentTime.getHours() * 60) + (currentTime.getMinutes())
                 let ct = await CommuteTime.findOne({origin, destination, currentTime})
                 let query = new CommuteQuery(origin, destination);
-                query.getCommute();
+                let results = await query.getCommute();
+
+                let newDuration = Math.floor(results.json.rows[0].elements[0].duration_in_traffic.value/60);
+
+                
                 if(ct){
                     ct.durations.push(newDuration)
                     return ct.save();
