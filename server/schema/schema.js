@@ -47,18 +47,17 @@ const Mutation = new GraphQLObjectType({
             args: {
                 origin: {type: new GraphQLNonNull(GraphQLString)},
                 destination: {type: new GraphQLNonNull(GraphQLString)},
-                // currentTime: {type: new GraphQLNonNull(GraphQLInt)},
+                currentTime: {type: new GraphQLNonNull(GraphQLInt)},
             },
-            async resolve(parent, {origin, destination}){
-                let currentTime = new Date()
-                console.log(currentTime.getHours(), currentTime.getMinutes())
-                currentTime = (currentTime.getHours() * 60) + (currentTime.getMinutes())
-                let ct = await CommuteTime.findOne({origin, destination, currentTime})
+            async resolve(parent, {origin, destination, currentTime}){                
+                // create a new commute querry class and run the maps search
                 let query = new CommuteQuery(origin, destination);
-                let results = await query.getCommute();
-
+                let results = await query.getCommute();                
+                // the new duration will be foun in the results of the maps query at the path below (assumes you only had one origin and destination)
                 let newDuration = Math.floor(results.json.rows[0].elements[0].duration_in_traffic.value/60);
-
+                
+                // find the commute that matches the origin and destination (and current time)
+                let ct = await CommuteTime.findOne({origin, destination, currentTime})
                 
                 if(ct){
                     ct.durations.push(newDuration)

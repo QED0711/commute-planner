@@ -1,6 +1,7 @@
+const API_KEY = require('./API_KEY');
+
 const googleMapsClient = require('@google/maps').createClient({
-	key: "AIzaSyBpnUkjHlpYmffT6Rlsx9XxdyMr9w36Ufc"
-	// key : "AIzaSyCcVjp8hhEkBMPaZeZV_FokWxM8W3aJXUc"
+	key: API_KEY
 });
 
 class CommuteQuery {
