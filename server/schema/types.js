@@ -33,9 +33,8 @@ const CommuteTimeType = new GraphQLObjectType({
     name: "CommuteTime",
     fields: (() =>({
         id: {type: GraphQLID},
-        startLocation: {type: GraphQLString},
-        endLocation: {type: GraphQLString},
-        endLocation: {type: GraphQLString},
+        origin: {type: GraphQLString},
+        destination: {type: GraphQLString},
         currentTime: {type: GraphQLInt},
         durations: {type: new GraphQLList(GraphQLInt)}
     }))

@@ -16,8 +16,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const commuteTimeSchema = new Schema({
-    startLocation: String,
-    endLocation: String,
+    origin: String,
+    destination: String,
     currentTime: Number,
     durations: [{type: Number}]
 })
