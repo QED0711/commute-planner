@@ -13,6 +13,8 @@ const {
 
 const {CommuteTimeType} = require('./types');
 
+const CommuteTime = require('./models/commuteTime');
+
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
@@ -20,7 +22,17 @@ const RootQuery = new GraphQLObjectType({
         commuteTimes: {
             type: CommuteTimeType,
             resolve(parent, args){
-                return {duration: ["15", "35"]}
+                return {duration: [15, 35]}
+            }
+        },
+
+        durationsAtTime: {
+            type: CommuteTimeType,
+            args: {
+                currentTime: {type: new GraphQLNonNull(GraphQLInt)},
+            },
+            resolve(parent, {currentTime}){
+                return CommuteTime.findOne({currentTime});
             }
         }
     }
@@ -31,10 +43,24 @@ const Mutation = new GraphQLObjectType({
     fields: {
         addDuration: {
             type: CommuteTimeType,
-            resolve(parent, args){
-                console.log("Hit mutation")
+            args: {
+                startLocation: {type: new GraphQLNonNull(GraphQLString)},
+                endLocation: {type: new GraphQLNonNull(GraphQLString)},
+                currentTime: {type: new GraphQLNonNull(GraphQLInt)},
+                newDuration: {type: new GraphQLNonNull(GraphQLInt)}
+            },
+            async resolve(parent, {startLocation, endLocation, currentTime, newDuration}){
+                let ct = await CommuteTime.findOne({startLocation, endLocation, currentTime})
+                if(ct){
+                    ct.durations.push(newDuration)
+                    return ct.save();
+                } else {
+                    return CommuteTime.create({startLocation, endLocation, currentTime, durations: [newDuration]})
+                }                
             }
-        }
+        },
+
+
     }
 })
 
