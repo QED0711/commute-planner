@@ -12,9 +12,11 @@ class CommuteQuery {
 		this.avoid = ["tolls"];
 		this.traffic_model = "best_guess";
 		this.departure_time = "now"
+		console.log("CREATED")
 	}
 
 	getCommute(){
+		console.log("BOOM-COMMUTE")
 		return new Promise(resolve => {
 			googleMapsClient.distanceMatrix(this, (err, response) => {
 				if(err){

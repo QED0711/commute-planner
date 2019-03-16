@@ -2,7 +2,7 @@
 
 object format
 
-commuteTime {
+route {
     startLocation: location,
     endLocation location,
     currentTime: hh:mm,
@@ -15,11 +15,10 @@ commuteTime {
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const commuteTimeSchema = new Schema({
+const routeSchema = new Schema({
     origin: String,
     destination: String,
-    currentTime: Number,
-    durations: [{type: Number}]
+    times: [{type: Object}]
 })
 
-module.exports = mongoose.model("CommuteTime", commuteTimeSchema);
+module.exports = mongoose.model("Route", routeSchema);

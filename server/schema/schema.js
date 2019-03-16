@@ -11,29 +11,19 @@ const {
     GraphQLNonNull
 } = graphql;
 
-const {CommuteTimeType} = require('./types');
+const {RouteType} = require('./types');
 
-const CommuteTime = require('./models/commuteTime');
+const Route = require('./models/route');
 const CommuteQuery = require('../CommuteQuery');
 
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
-        commuteTimes: {
-            type: CommuteTimeType,
+        routes: {
+            type: RouteType,
             resolve(parent, args){
-                return CommuteTime.find({})
-            }
-        },
-
-        durationsAtTime: {
-            type: CommuteTimeType,
-            args: {
-                currentTime: {type: new GraphQLNonNull(GraphQLInt)},
-            },
-            resolve(parent, {currentTime}){
-                return CommuteTime.findOne({currentTime});
+                return Route.findAll({})
             }
         },
     }
@@ -42,14 +32,14 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
-        addDuration: {
-            type: CommuteTimeType,
+        addRouteTime: {
+            type: RouteType,
             args: {
                 origin: {type: new GraphQLNonNull(GraphQLString)},
                 destination: {type: new GraphQLNonNull(GraphQLString)},
-                currentTime: {type: new GraphQLNonNull(GraphQLInt)},
+                currentMinute: {type: new GraphQLNonNull(GraphQLInt)}
             },
-            async resolve(parent, {origin, destination, currentTime}){                
+            async resolve(parent, {origin, destination, currentMinute}){       
                 // create a new commute querry class and run the maps search
                 let query = new CommuteQuery(origin, destination);
                 let results = await query.getCommute();                
@@ -57,13 +47,20 @@ const Mutation = new GraphQLObjectType({
                 let newDuration = Math.floor(results.json.rows[0].elements[0].duration_in_traffic.value/60);
                 
                 // find the commute that matches the origin and destination (and current time)
-                let ct = await CommuteTime.findOne({origin, destination, currentTime})
-                
-                if(ct){
-                    ct.durations.push(newDuration)
-                    return ct.save();
+                let route = await Route.findOne({origin, destination})
+                // console.log(route)         
+                if(route){
+                    // if the route already exists add to/create new time slot
+                    if(route.times[currentMinute]){
+                        route.times[currentMinute].push(newDuration)
+                    } else {
+                        route.times[currentMinute] = [newDuration];
+                    }
+                    return route.save();
                 } else {
-                    return CommuteTime.create({origin, destination, currentTime, durations: [newDuration]})
+                    let times = []
+                    times[currentMinute] = [newDuration]
+                    return Route.create({origin, destination, times})
                 }                
             }
         },

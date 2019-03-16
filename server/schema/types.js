@@ -29,18 +29,22 @@ const {
 
 
 
-const CommuteTimeType = new GraphQLObjectType({
+const RouteType = new GraphQLObjectType({
     name: "CommuteTime",
     fields: (() =>({
         id: {type: GraphQLID},
         origin: {type: GraphQLString},
         destination: {type: GraphQLString},
-        currentTime: {type: GraphQLInt},
-        durations: {type: new GraphQLList(GraphQLInt)}
+        times: {type: new GraphQLList(new GraphQLList(GraphQLInt))}
     }))
 })
 
+// const TimeType = new GraphQLObjectType({
+//     name: "Time",
+//     fields: (() => ({
 
+//     }))
+// })
 
 
 
@@ -48,5 +52,5 @@ const CommuteTimeType = new GraphQLObjectType({
 
 
 module.exports = {
-    CommuteTimeType
+    RouteType
 }
