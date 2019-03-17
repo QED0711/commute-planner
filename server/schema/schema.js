@@ -21,9 +21,9 @@ const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
         routes: {
-            type: RouteType,
+            type: new GraphQLList(RouteType),
             resolve(parent, args){
-                return Route.findAll({})
+                return Route.find({})
             }
         },
     }
@@ -45,8 +45,7 @@ const Mutation = new GraphQLObjectType({
                 let results = await query.getCommute();                
                 // the new duration will be foun in the results of the maps query at the path below (assumes you only had one origin and destination)
                 let newDuration = Math.floor(results.json.rows[0].elements[0].duration_in_traffic.value/60);
-                
-                
+                                
                 let route = await Route.findOne({origin, destination})
                 if(route){
                     // if the route already exists add to/create new time slot
