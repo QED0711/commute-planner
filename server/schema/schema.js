@@ -73,6 +73,18 @@ const Mutation = new GraphQLObjectType({
             }
         },
 
+        newRoute: {
+            type: RouteType,
+            args: {
+                origin: {type: new GraphQLNonNull(GraphQLString)},
+                destination: {type: new GraphQLNonNull(GraphQLString)}
+            },
+            resolve(parent, {origin, destination}){
+                let times = new Array(288).fill(null);
+                return Route.create({origin, destination, times});
+            }
+        }
+
     }
 })
 

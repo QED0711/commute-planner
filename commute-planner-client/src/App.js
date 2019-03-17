@@ -12,6 +12,7 @@ import {ApolloProvider} from 'react-apollo';
 // COMPONENTS
 import Routes from './components/Routes';
 import CurrentRoute from './components/CurrentRoute';
+import NewRouteForm from './components/NewRouteForm';
 
 
 
@@ -47,6 +48,7 @@ class App extends Component {
           <h2>Routes</h2>
           <Routes setCurrentRoute={this.setCurrentRoute} />
           <CurrentRoute routeID={this.state.currentRoute}/>
+          <NewRouteForm />
         </div>
       </ApolloProvider>
     );
