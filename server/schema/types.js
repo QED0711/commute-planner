@@ -30,7 +30,7 @@ const {
 
 
 const RouteType = new GraphQLObjectType({
-    name: "CommuteTime",
+    name: "Route",
     fields: (() =>({
         id: {type: GraphQLID},
         origin: {type: GraphQLString},
@@ -38,17 +38,6 @@ const RouteType = new GraphQLObjectType({
         times: {type: new GraphQLList(new GraphQLList(GraphQLInt))}
     }))
 })
-
-// const TimeType = new GraphQLObjectType({
-//     name: "Time",
-//     fields: (() => ({
-
-//     }))
-// })
-
-
-
-
 
 
 module.exports = {

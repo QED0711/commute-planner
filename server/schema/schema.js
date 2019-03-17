@@ -47,16 +47,43 @@ const Mutation = new GraphQLObjectType({
                 let newDuration = Math.floor(results.json.rows[0].elements[0].duration_in_traffic.value/60);
                 
                 // find the commute that matches the origin and destination (and current time)
+                // return Route.findOne({origin, destination}, (err, route) => {
+                //     if(err){
+                //         console.log(err)
+                //     } 
+                //     if(!route){
+                //         let times = []
+                //         times[currentMinute] = [newDuration]
+                //         return Route.create({origin, destination, times})
+                //     }
+                    
+                //     if(!!route.times[currentMinute]){
+                //         route.times[currentMinute].push(newDuration)                            
+                //     } else {
+                //         route.times[currentMinute] = [newDuration];
+                //     }
+                //     // console.log(route)
+                //     route.markModified("tests");
+                //     return route.save();
+
+                // })
+                
+                
                 let route = await Route.findOne({origin, destination})
-                // console.log(route)         
+
+
+
+                console.log("ONE: ", route)
                 if(route){
                     // if the route already exists add to/create new time slot
-                    if(route.times[currentMinute]){
+                    if(!!route.times[currentMinute]){                        
                         route.times[currentMinute].push(newDuration)
                     } else {
                         route.times[currentMinute] = [newDuration];
                     }
-                    return route.save();
+                    console.log("TWO: ", route)
+                    route.markModified("times")
+                    return route.save()
                 } else {
                     let times = []
                     times[currentMinute] = [newDuration]
