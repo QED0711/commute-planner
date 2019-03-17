@@ -8,6 +8,7 @@
     "react": "^16.8.4",
     "react-apollo": "^2.5.2",
     "react-dom": "^16.8.4",
+    "react-easy-chart": "^1.0.0",
     "react-scripts": "2.1.8"
   },
   "scripts": {
