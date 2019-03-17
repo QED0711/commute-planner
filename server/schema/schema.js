@@ -46,34 +46,8 @@ const Mutation = new GraphQLObjectType({
                 // the new duration will be foun in the results of the maps query at the path below (assumes you only had one origin and destination)
                 let newDuration = Math.floor(results.json.rows[0].elements[0].duration_in_traffic.value/60);
                 
-                // find the commute that matches the origin and destination (and current time)
-                // return Route.findOne({origin, destination}, (err, route) => {
-                //     if(err){
-                //         console.log(err)
-                //     } 
-                //     if(!route){
-                //         let times = []
-                //         times[currentMinute] = [newDuration]
-                //         return Route.create({origin, destination, times})
-                //     }
-                    
-                //     if(!!route.times[currentMinute]){
-                //         route.times[currentMinute].push(newDuration)                            
-                //     } else {
-                //         route.times[currentMinute] = [newDuration];
-                //     }
-                //     // console.log(route)
-                //     route.markModified("tests");
-                //     return route.save();
-
-                // })
-                
                 
                 let route = await Route.findOne({origin, destination})
-
-
-
-                console.log("ONE: ", route)
                 if(route){
                     // if the route already exists add to/create new time slot
                     if(!!route.times[currentMinute]){                        
@@ -81,11 +55,11 @@ const Mutation = new GraphQLObjectType({
                     } else {
                         route.times[currentMinute] = [newDuration];
                     }
-                    console.log("TWO: ", route)
+                    console.log(route)
                     route.markModified("times")
                     return route.save()
                 } else {
-                    let times = []
+                    let times = new Array(288).fill(null)
                     times[currentMinute] = [newDuration]
                     return Route.create({origin, destination, times})
                 }                
