@@ -10,7 +10,9 @@ import {ApolloProvider} from 'react-apollo';
 
 
 // COMPONENTS
-import CurrentRoutes from './components/CurrentRoutes';
+import Routes from './components/Routes';
+import CurrentRoute from './components/CurrentRoute';
+
 
 
 const client = new ApolloClient({
@@ -20,12 +22,31 @@ const client = new ApolloClient({
 
 
 class App extends Component {
+  constructor(){
+    super();
+    
+    this.state = {
+      currentRoute: null,
+    }
+
+    this.setCurrentRoute = this.setCurrentRoute.bind(this)
+
+  }
+  
+
+  setCurrentRoute(routeID){
+    console.log(routeID);
+    this.setState({currentRoute: routeID});
+  }
+
+
   render() {
     return (
       <ApolloProvider client={client}>
         <div className="App">
           <h2>Routes</h2>
-          <CurrentRoutes />
+          <Routes setCurrentRoute={this.setCurrentRoute} />
+          <CurrentRoute routeID={this.state.currentRoute}/>
         </div>
       </ApolloProvider>
     );
