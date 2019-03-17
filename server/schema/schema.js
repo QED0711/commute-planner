@@ -6,7 +6,8 @@ const {
     GraphQLSchema,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLID,
 } = graphql;
 
 const {RouteType} = require('./types');
@@ -24,6 +25,16 @@ const RootQuery = new GraphQLObjectType({
                 return Route.find({})
             }
         },
+
+        route : {
+            type: RouteType,
+            args: {
+                id: {type: new GraphQLNonNull(GraphQLID)}
+            },
+            resolve(parent, {id}){
+                return Route.findById(id)
+            }
+        }
     }
 })
 
@@ -52,7 +63,6 @@ const Mutation = new GraphQLObjectType({
                     } else {
                         route.times[currentMinute] = [newDuration];
                     }
-                    console.log(route)
                     route.markModified("times")
                     return route.save()
                 } else {
