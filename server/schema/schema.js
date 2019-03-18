@@ -73,6 +73,33 @@ const Mutation = new GraphQLObjectType({
             }
         },
 
+        runAllCommutes: {
+            type: new GraphQLList(RouteType),
+            args: {
+                currentMinute: {type: new GraphQLNonNull(GraphQLInt)}
+            },
+            async resolve(parent, {currentMinute}){
+                let routes = await Route.find({})
+                
+                let query, results, newDuration;
+                routes.forEach(async (route) => {
+                    query = new CommuteQuery(route.origin, route.destination)
+                    results = await query.getCommute();                
+                    // the new duration will be foun in the results of the maps query at the path below (assumes you only had one origin and destination)
+                    newDuration = Math.floor(results.json.rows[0].elements[0].duration_in_traffic.value/60);
+
+                    if(!!route.times[currentMinute]){                        
+                        route.times[currentMinute].push(newDuration)
+                    } else {
+                        route.times[currentMinute] = [newDuration];
+                    }
+                    route.markModified("times")
+                    await route.save()
+                })
+                return routes;
+            }
+        },
+
         newRoute: {
             type: RouteType,
             args: {

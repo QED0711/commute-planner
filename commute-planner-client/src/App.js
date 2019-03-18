@@ -13,6 +13,7 @@ import {ApolloProvider} from 'react-apollo';
 import Routes from './components/Routes';
 import CurrentRoute from './components/CurrentRoute';
 import NewRouteForm from './components/NewRouteForm';
+import RunCommuteQueries from './components/RunCommuteQueries';
 
 
 
@@ -49,6 +50,7 @@ class App extends Component {
           <Routes setCurrentRoute={this.setCurrentRoute} />
           <CurrentRoute routeID={this.state.currentRoute}/>
           <NewRouteForm />
+          <RunCommuteQueries />
         </div>
       </ApolloProvider>
     );
