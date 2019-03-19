@@ -76,9 +76,11 @@ const Mutation = new GraphQLObjectType({
         runAllCommutes: {
             type: new GraphQLList(RouteType),
             args: {
-                currentMinute: {type: new GraphQLNonNull(GraphQLInt)}
+                currentMinute: {type: new GraphQLNonNull(GraphQLString)}
             },
             async resolve(parent, {currentMinute}){
+                currentMinute = parseInt(currentMinute) / 5
+                console.log(currentMinute);
                 let routes = await Route.find({})
                 
                 let query, results, newDuration;
