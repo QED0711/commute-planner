@@ -47,10 +47,10 @@ class App extends Component {
       <ApolloProvider client={client}>
         <div className="App">
           <h2>Routes</h2>
+          <RunCommuteQueries />
           <Routes setCurrentRoute={this.setCurrentRoute} />
           <CurrentRoute routeID={this.state.currentRoute}/>
           <NewRouteForm />
-          <RunCommuteQueries />
         </div>
       </ApolloProvider>
     );

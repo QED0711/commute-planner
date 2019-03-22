@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 .App-logo {
@@ -19,15 +20,23 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+button, input[type="submit"]{
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button, input[type="submit"], input[type="text"]{
+  font-size: 1.5em;
+  border-radius: 8px;
+  border: 2px solid black;
+  background-color: #ffffff00;
+  margin: .5em;
+}
+
+select{
+  font-size: 2em;
+  margin: .75em;
+}
+
+label{
+  font-size: 1.5em;
 }
